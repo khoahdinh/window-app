@@ -1,6 +1,14 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 export default function ComposeScreen() {
   // useState lưu nội dung text đang gõ
@@ -18,7 +26,11 @@ export default function ComposeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 125 : 0}
+    >
       {/* Header: nút đóng bên trái, không cần tiêu đề lớn vì đã có title từ Stack.Screen options */}
       <View style={styles.header}>
         <Pressable onPress={() => router.back()}>
@@ -45,7 +57,7 @@ export default function ComposeScreen() {
       >
         <Text style={styles.sendButtonText}>Send</Text>
       </Pressable>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
