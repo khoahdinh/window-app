@@ -1,7 +1,8 @@
 // Import các function cần thiết từ Firebase SDK
 // Giống kiểu #include từng module riêng trong C++ (modular, chỉ lấy cái cần dùng)
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getReactNativePersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 // Đọc config từ biến môi trường (đã set trong .env)
@@ -22,5 +23,12 @@ const app = initializeApp(firebaseConfig);
 
 // Export các service đã khởi tạo sẵn, để file khác import dùng trực tiếp
 // (không phải khởi tạo lại mỗi lần dùng — giống singleton pattern)
-export const auth = getAuth(app);
+
+// initializeAuth thay cho getAuth — cho phép custom persistence
+// getReactNativePersistence(AsyncStorage) nói rõ: "lưu session vào AsyncStorage"
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+// export const auth = getAuth(app);
+
 export const db = getFirestore(app);
