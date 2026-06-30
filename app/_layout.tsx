@@ -1,4 +1,5 @@
 // nơi bọc ngoài toàn bộ app (chứa cả (tabs) và compose trong <Stack>)
+// quan sát trạng thái (onAuthStateChanged) và quyết định route dựa trên trạng thái đó.
 import {
   DarkTheme,
   DefaultTheme,
@@ -14,6 +15,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import "react-native-reanimated";
+import AuthScreen from "./auth";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -47,28 +49,30 @@ export default function RootLayout() {
     return unsubscribe;
   }, []); // [] = chỉ chạy 1 lần khi component mount, giống setup 1 lần
 
-  // Tầng 1: chưa biết gì cả → đợi
-  if (initializing) {
+  function renderContent() {
+    // Tầng 1: chưa biết gì cả → đợi
+    if (initializing) {
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text>Window</Text>
+        </View>
+      );
+    }
+
+    // Tầng 2: đã biết rồi, nhưng chưa login → hiện Auth
+    if (!user) {
+      return <AuthScreen />;
+    }
+
+    // Tầng 3: đã login, nhưng chưa pair với ai → hiện Pairing
+    if (!coupleId) {
+      return <Text>Pairing Screen (chưa code)</Text>;
+    }
+
+    // Tầng 4: đã login + đã pair → vào app thật
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Window</Text>
-      </View>
-    );
-  }
-
-  // Tầng 2: đã biết rồi, nhưng chưa login → hiện Auth
-  if (!user) {
-    return <Text>Auth Screen (chưa code)</Text>;
-  }
-
-  // Tầng 3: đã login, nhưng chưa pair với ai → hiện Pairing
-  if (!coupleId) {
-    return <Text>Pairing Screen (chưa code)</Text>;
-  }
-
-  // Tầng 4: đã login + đã pair → vào app thật
-  return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
@@ -76,6 +80,12 @@ export default function RootLayout() {
           options={{ presentation: "modal", title: "New Moment" }}
         />
       </Stack>
+    );
+  }
+
+  return (
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      {renderContent()}
       <StatusBar style="auto" />
     </ThemeProvider>
   );
