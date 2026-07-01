@@ -10,12 +10,16 @@ import {
 
 import { Colors } from "@/constants/theme";
 import { auth, db } from "@/firebaseConfig";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 
 // 3 trạng thái UI của màn này
 type PairingMode = null | "create" | "join";
 
-export default function PairingScreen() {
+type Props = {
+  onPaired: (coupleId: string) => void;
+};
+
+export default function PairingScreen({ onPaired }: Props) {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
@@ -48,6 +52,16 @@ export default function PairingScreen() {
 
     // Hiện code lên UI để user copy cho partner
     setPairingCode(code);
+
+    // Lắng nghe users/{uid} của mình, khi partner join xong,
+    // _layout.tsx sẽ cập nhật coupleId vào đây
+    const unsubscribe = onSnapshot(doc(db, "users", uid), (snapshot) => {
+      const data = snapshot.data();
+      if (data?.coupleId) {
+        unsubscribe(); // hủy listener ngay sau khi có coupleId, tránh leak
+        onPaired(data.coupleId);
+      }
+    });
   }
 
   async function handleJoinPair() {
@@ -87,6 +101,9 @@ export default function PairingScreen() {
 
     // Xóa pairingCode đã dùng, không cần nữa
     await setDoc(doc(db, "pairingCodes", pairingCode), { used: true });
+
+    // Báo cho _layout.tsx biết để chuyển màn
+    onPaired(coupleId);
   }
 
   // --- Màn chọn ban đầu (mode === null) ---

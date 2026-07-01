@@ -69,7 +69,7 @@ export default function RootLayout() {
 
     // Tầng 3: đã login, nhưng chưa pair với ai → hiện Pairing
     if (!coupleId) {
-      return <PairingScreen />;
+      return <PairingScreen onPaired={(id) => setCoupleId(id)} />;
     }
 
     // Tầng 4: đã login + đã pair → vào app thật
