@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import "react-native-reanimated";
 import AuthScreen from "./auth";
+import PairingScreen from "./pairing";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -68,7 +69,7 @@ export default function RootLayout() {
 
     // Tầng 3: đã login, nhưng chưa pair với ai → hiện Pairing
     if (!coupleId) {
-      return <Text>Pairing Screen (chưa code)</Text>;
+      return <PairingScreen />;
     }
 
     // Tầng 4: đã login + đã pair → vào app thật
