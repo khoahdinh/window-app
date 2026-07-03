@@ -21,6 +21,7 @@ import {
 
 import { auth, db } from "../firebaseConfig";
 import { getVietnamDateString } from "../utils/dateHelpers";
+import { maybeIncrementSharedDays } from "../utils/scoreHelpers";
 
 const MAX_LENGTH = 80;
 
@@ -51,14 +52,19 @@ export default function ComposeScreen() {
         return;
       }
 
+      const day = getVietnamDateString();
+
       // Bước 2: tạo document mới trong collection "moments"
       await addDoc(collection(db, "moments"), {
         coupleId,
         authorUid: uid,
         text: text.trim(),
         createdAt: serverTimestamp(),
-        day: getVietnamDateString(),
+        day,
       });
+
+      // Check xem sau lần gửi này, cả 2 đã đủ điều kiện tính điểm ngày hôm nay chưa
+      await maybeIncrementSharedDays(coupleId, day);
 
       router.back();
     } catch (error) {
