@@ -79,7 +79,7 @@ export default function WindowGrid({ moments, onSlotPress }: WindowGridProps) {
 const styles = StyleSheet.create({
   grid: {
     width: "100%",
-    aspectRatio: 1, // giữ khung vuông tổng thể, giống 1 cửa sổ 4 ô kính thật
+    aspectRatio: 1,
     padding: 8,
   },
   row: {
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 12,
-    backgroundColor: "#F5F5F5", // thẻ trung tính, không phải bong bóng chat
+    backgroundColor: "#F5F5F5",
   },
   normalText: {
     fontSize: 15,
@@ -101,16 +101,16 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   emojiOnlyText: {
-    fontSize: 40, // to hơn hẳn khi chỉ có emoji đứng 1 mình
+    fontSize: 40, // to hơn khi chỉ có emoji đứng 1 mình
   },
   emptySlot: {
     backgroundColor: "transparent",
     borderWidth: 1,
     borderStyle: "dashed",
-    borderColor: "#D8D8D8", // viền mờ, im lặng, không nhắc nhở
+    borderColor: "#D8D8D8",
   },
   emptySlotPlus: {
     fontSize: 20,
-    color: "#D8D8D8", // nhạt, chỉ đủ gợi ý chứ không thúc giục
+    color: "#D8D8D8",
   },
 });
