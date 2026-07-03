@@ -9,6 +9,7 @@ import {
   Text,
   TextInput,
   View,
+  useColorScheme,
 } from "react-native";
 
 import {
@@ -19,6 +20,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
+import { Colors } from "@/constants/theme";
 import { auth, db } from "../firebaseConfig";
 import { getVietnamDateString } from "../utils/dateHelpers";
 import { maybeIncrementSharedDays } from "../utils/scoreHelpers";
@@ -26,6 +28,9 @@ import { maybeIncrementSharedDays } from "../utils/scoreHelpers";
 const MAX_LENGTH = 80;
 
 export default function ComposeScreen() {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
   // useState lưu nội dung text đang gõ
   // Giống biến local trong 1 hàm C++, nhưng React tự re-render UI mỗi khi giá trị đổi
   const [text, setText] = useState("");
@@ -76,22 +81,24 @@ export default function ComposeScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={[styles.container, { backgroundColor: colors.background }]}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={Platform.OS === "ios" ? 125 : 0}
     >
       {/* Header: nút đóng bên trái, không cần tiêu đề lớn vì đã có title từ Stack.Screen options */}
       <View style={styles.header}>
         <Pressable onPress={() => router.back()}>
-          <Text style={styles.closeButton}>Cancel</Text>
+          <Text style={[styles.closeButton, { color: colors.tint }]}>
+            Cancel
+          </Text>
         </Pressable>
       </View>
 
       {/* Text input chính */}
       <TextInput
-        style={styles.input}
+        style={[styles.input, { color: colors.text }]}
         placeholder="What's your moment today?"
-        placeholderTextColor="#999"
+        placeholderTextColor={colors.icon}
         multiline
         value={text}
         onChangeText={setText}
@@ -104,6 +111,7 @@ export default function ComposeScreen() {
       <Text
         style={[
           styles.charCount,
+          { color: colors.icon },
           text.length >= MAX_LENGTH && styles.charCountLimit,
         ]}
       >
@@ -114,15 +122,23 @@ export default function ComposeScreen() {
       <Pressable
         style={[
           styles.sendButton,
+          { backgroundColor: colors.tint },
           (!text.trim() || sending) && styles.sendButtonDisabled,
         ]}
         onPress={handleSend}
         disabled={!text.trim() || sending}
       >
         {sending ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color={colorScheme === "dark" ? "#000" : "#fff"} />
         ) : (
-          <Text style={styles.sendButtonText}>Send</Text>
+          <Text
+            style={[
+              styles.sendButtonText,
+              { color: colorScheme === "dark" ? "#000" : "#fff" },
+            ]}
+          >
+            Send
+          </Text>
         )}
       </Pressable>
     </KeyboardAvoidingView>
@@ -130,47 +146,22 @@ export default function ComposeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
+  container: { flex: 1, padding: 20 },
   header: {
     flexDirection: "row",
     justifyContent: "flex-end",
     marginBottom: 20,
   },
-  closeButton: {
-    fontSize: 16,
-    color: "#007AFF",
-  },
-  input: {
-    fontSize: 20,
-    minHeight: 100,
-    textAlignVertical: "top",
-  },
-  charCount: {
-    textAlign: "right",
-    fontSize: 12,
-    color: "#999",
-    marginTop: 4,
-  },
-  charCountLimit: {
-    color: "#FF3B30",
-  },
+  closeButton: { fontSize: 16 },
+  input: { fontSize: 20, minHeight: 100, textAlignVertical: "top" },
+  charCount: { textAlign: "right", fontSize: 12, marginTop: 4 },
+  charCountLimit: { color: "#FF3B30" },
   sendButton: {
-    backgroundColor: "#007AFF",
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: "center",
     marginTop: "auto",
   },
-  sendButtonDisabled: {
-    backgroundColor: "#ccc",
-  },
-  sendButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
+  sendButtonDisabled: { opacity: 0.4 },
+  sendButtonText: { fontSize: 16, fontWeight: "600" },
 });

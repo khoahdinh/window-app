@@ -2,10 +2,17 @@
 // npx expo start --tunnel
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  useColorScheme,
+} from "react-native";
 import WindowGrid, { Moment } from "../../components/WindowGrid";
 import { auth, db } from "../../firebaseConfig";
 import { getVietnamDateString } from "../../utils/dateHelpers";
+import { Colors } from "@/constants/theme";
 
 import {
   collection,
@@ -20,6 +27,9 @@ import {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
   const [moments, setMoments] = useState<Moment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -69,15 +79,15 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007AFF" />
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.tint} />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Today's Window</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>Today's Window</Text>
       <WindowGrid
         moments={moments}
         onSlotPress={() => router.push("/compose")}
@@ -87,12 +97,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: 60,
-    paddingHorizontal: 16,
-  },
+  container: { flex: 1, paddingTop: 60, paddingHorizontal: 16 },
   title: {
     fontSize: 24,
     fontWeight: "700",

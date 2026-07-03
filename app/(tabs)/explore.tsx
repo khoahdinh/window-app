@@ -1,10 +1,20 @@
 // app/(tabs)/explore.tsx
-import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { doc, onSnapshot, getDoc } from "firebase/firestore";
+import { Colors } from "@/constants/theme";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from "react-native";
 import { auth, db } from "../../firebaseConfig";
 
 export default function ExploreScreen() {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
   const [sharedDaysCount, setSharedDaysCount] = useState<number | null>(null);
 
   useEffect(() => {
@@ -33,16 +43,18 @@ export default function ExploreScreen() {
 
   if (sharedDaysCount === null) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007AFF" />
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.tint} />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.count}>{sharedDaysCount}</Text>
-      <Text style={styles.label}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.count, { color: colors.tint }]}>
+        {sharedDaysCount}
+      </Text>
+      <Text style={[styles.label, { color: colors.icon }]}>
         {sharedDaysCount === 1 ? "day shared together" : "days shared together"}
       </Text>
     </View>
@@ -50,20 +62,7 @@ export default function ExploreScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  count: {
-    fontSize: 64,
-    fontWeight: "700",
-    color: "#007AFF",
-  },
-  label: {
-    fontSize: 16,
-    color: "#999",
-    marginTop: 8,
-  },
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  count: { fontSize: 64, fontWeight: "700" },
+  label: { fontSize: 16, marginTop: 8 },
 });

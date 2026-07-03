@@ -1,5 +1,12 @@
 // components/WindowGrid.tsx
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
+import { Colors } from "@/constants/theme";
 
 export interface Moment {
   id: string;
@@ -19,13 +26,23 @@ function isEmojiOnly(text: string): boolean {
   return /^\p{Emoji}+$/u.test(stripped);
 }
 
-function MomentCard({ moment }: { moment: Moment }) {
+function MomentCard({
+  moment,
+  colors,
+}: {
+  moment: Moment;
+  colors: typeof Colors.light;
+}) {
   const emojiOnly = isEmojiOnly(moment.text);
 
   return (
-    <View style={styles.slot}>
+    <View style={[styles.slot, { backgroundColor: colors.cardBackground }]}>
       <Text
-        style={emojiOnly ? styles.emojiOnlyText : styles.normalText}
+        style={
+          emojiOnly
+            ? styles.emojiOnlyText
+            : [styles.normalText, { color: colors.text }]
+        }
         numberOfLines={emojiOnly ? 1 : 4}
       >
         {moment.text}
@@ -34,15 +51,33 @@ function MomentCard({ moment }: { moment: Moment }) {
   );
 }
 
-function EmptySlot({ onPress }: { onPress?: () => void }) {
+function EmptySlot({
+  onPress,
+  colors,
+}: {
+  onPress?: () => void;
+  colors: typeof Colors.light;
+}) {
   return (
-    <Pressable style={[styles.slot, styles.emptySlot]} onPress={onPress}>
-      <Text style={styles.emptySlotPlus}>+</Text>
+    <Pressable
+      style={[
+        styles.slot,
+        styles.emptySlot,
+        { borderColor: colors.emptyBorder },
+      ]}
+      onPress={onPress}
+    >
+      <Text style={[styles.emptySlotPlus, { color: colors.emptyBorder }]}>
+        +
+      </Text>
     </Pressable>
   );
 }
 
 export default function WindowGrid({ moments, onSlotPress }: WindowGridProps) {
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? "light"];
+
   // Luôn có đúng 4 vị trí, slot nào chưa có moment thì render EmptySlot
   const slots = Array.from({ length: 4 }, (_, i) => moments[i] ?? null);
 
@@ -50,26 +85,26 @@ export default function WindowGrid({ moments, onSlotPress }: WindowGridProps) {
     <View style={styles.grid}>
       <View style={styles.row}>
         {slots[0] ? (
-          <MomentCard moment={slots[0]} />
+          <MomentCard moment={slots[0]} colors={colors} />
         ) : (
-          <EmptySlot onPress={onSlotPress} />
+          <EmptySlot onPress={onSlotPress} colors={colors} />
         )}
         {slots[1] ? (
-          <MomentCard moment={slots[1]} />
+          <MomentCard moment={slots[1]} colors={colors} />
         ) : (
-          <EmptySlot onPress={onSlotPress} />
+          <EmptySlot onPress={onSlotPress} colors={colors} />
         )}
       </View>
       <View style={styles.row}>
         {slots[2] ? (
-          <MomentCard moment={slots[2]} />
+          <MomentCard moment={slots[2]} colors={colors} />
         ) : (
-          <EmptySlot onPress={onSlotPress} />
+          <EmptySlot onPress={onSlotPress} colors={colors} />
         )}
         {slots[3] ? (
-          <MomentCard moment={slots[3]} />
+          <MomentCard moment={slots[3]} colors={colors} />
         ) : (
-          <EmptySlot onPress={onSlotPress} />
+          <EmptySlot onPress={onSlotPress} colors={colors} />
         )}
       </View>
     </View>
@@ -77,15 +112,8 @@ export default function WindowGrid({ moments, onSlotPress }: WindowGridProps) {
 }
 
 const styles = StyleSheet.create({
-  grid: {
-    width: "100%",
-    aspectRatio: 1,
-    padding: 8,
-  },
-  row: {
-    flex: 1,
-    flexDirection: "row",
-  },
+  grid: { width: "100%", aspectRatio: 1, padding: 8 },
+  row: { flex: 1, flexDirection: "row" },
   slot: {
     flex: 1,
     margin: 6,
@@ -93,24 +121,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 12,
-    backgroundColor: "#F5F5F5",
   },
-  normalText: {
-    fontSize: 15,
-    textAlign: "center",
-    color: "#333",
-  },
-  emojiOnlyText: {
-    fontSize: 40, // to hơn khi chỉ có emoji đứng 1 mình
-  },
+  normalText: { fontSize: 15, textAlign: "center" },
+  emojiOnlyText: { fontSize: 40 },
   emptySlot: {
     backgroundColor: "transparent",
     borderWidth: 1,
     borderStyle: "dashed",
-    borderColor: "#D8D8D8",
   },
-  emptySlotPlus: {
-    fontSize: 20,
-    color: "#D8D8D8",
-  },
+  emptySlotPlus: { fontSize: 20 },
 });
