@@ -1,9 +1,11 @@
 // app/(tabs)/explore.tsx
 import { Colors } from "@/constants/theme";
+import { signOut } from "firebase/auth";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Pressable,
   StyleSheet,
   Text,
   useColorScheme,
@@ -41,6 +43,11 @@ export default function ExploreScreen() {
     };
   }, []);
 
+  const handleLogout = () => {
+    // onAuthStateChanged ở _layout.tsx tự bắt được, tự chuyển về màn Auth
+    signOut(auth);
+  };
+
   if (sharedDaysCount === null) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -51,18 +58,29 @@ export default function ExploreScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.count, { color: colors.tint }]}>
-        {sharedDaysCount}
-      </Text>
-      <Text style={[styles.label, { color: colors.icon }]}>
-        {sharedDaysCount === 1 ? "day shared together" : "days shared together"}
-      </Text>
+      <View style={styles.centerContent}>
+        <Text style={[styles.count, { color: colors.tint }]}>
+          {sharedDaysCount}
+        </Text>
+        <Text style={[styles.label, { color: colors.icon }]}>
+          {sharedDaysCount === 1
+            ? "day shared together"
+            : "days shared together"}
+        </Text>
+      </View>
+
+      <Pressable onPress={handleLogout} style={styles.logoutButton}>
+        <Text style={[styles.logoutText, { color: colors.icon }]}>Log out</Text>
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  container: { flex: 1, paddingVertical: 60 },
+  centerContent: { flex: 1, justifyContent: "center", alignItems: "center" },
   count: { fontSize: 64, fontWeight: "700" },
   label: { fontSize: 16, marginTop: 8 },
+  logoutButton: { alignItems: "center", paddingVertical: 12 },
+  logoutText: { fontSize: 14 },
 });
