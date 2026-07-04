@@ -13,7 +13,7 @@ A minimalist app for exactly two people to share one small moment of their day.
 
 Built for couples — especially long-distance ones — who want a little more to talk about when they call, not another chat app to check.
 
-[**Download for Android**](https://github.com/khoahdinh/window-app/releases/latest) &nbsp;·&nbsp; iOS not yet available, nternal build (APK), install manually on your device.
+[**Download for Android**](https://github.com/khoahdinh/window-app/releases/latest) &nbsp;·&nbsp; iOS not yet available, internal build (APK), install manually on your device.
 
 ## Philosophy
 
