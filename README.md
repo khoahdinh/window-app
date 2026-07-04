@@ -8,6 +8,7 @@
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 [![Downloads](https://img.shields.io/github/downloads/khoahdinh/window-app/total)](https://github.com/khoahdinh/window-app/releases/latest)
 ![Release](https://img.shields.io/github/v/release/khoahdinh/window-app)
+
 A minimalist app for exactly two people to share one small moment of their day.
 
 Built for couples — especially long-distance ones — who want a little more to talk about when they call, not another chat app to check.
