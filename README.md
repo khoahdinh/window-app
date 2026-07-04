@@ -98,6 +98,7 @@ It's also a portfolio project built to cover ground that earlier projects didn't
 <p align="center">
 <img src="./screenshots/start.jpg" width="220" />
   <img src="./screenshots/pairing.jpg" width="220" />
+  <img src="./screenshots/login.jpg" width="220" />
   <img src="./screenshots/today.jpg" width="220" />
   <img src="./screenshots/compose.jpg" width="220" />
   <img src="./screenshots/together.jpg" width="220" />
