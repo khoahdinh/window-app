@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "window-app",
+    "name": "Window",
     "slug": "window-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "softwareKeyboardLayoutMode": "resize"
+      "softwareKeyboardLayoutMode": "resize",
+      "package": "com.khoa.hdinh.windowapp"
     },
     "web": {
       "output": "static",
@@ -43,6 +44,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "2ad0e62c-930c-4450-b927-bf0ee9b0358f"
+      }
     }
   }
 }
