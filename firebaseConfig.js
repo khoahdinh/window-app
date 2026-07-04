@@ -2,8 +2,13 @@
 // Giống kiểu #include từng module riêng trong C++ (modular, chỉ lấy cái cần dùng)
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
-import { getReactNativePersistence, initializeAuth } from "firebase/auth";
+import {
+  getAuth,
+  getReactNativePersistence,
+  initializeAuth,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { Platform } from "react-native";
 
 // Đọc config từ biến môi trường (đã set trong .env)
 // process.env.EXPO_PUBLIC_... — Expo tự nhúng các biến có prefix này vào code lúc build
@@ -26,9 +31,12 @@ const app = initializeApp(firebaseConfig);
 
 // initializeAuth thay cho getAuth — cho phép custom persistence
 // getReactNativePersistence(AsyncStorage) nói rõ: "lưu session vào AsyncStorage"
-export const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage),
-});
+export const auth =
+  Platform.OS === "web"
+    ? getAuth(app)
+    : initializeAuth(app, {
+        persistence: getReactNativePersistence(AsyncStorage),
+      });
 // export const auth = getAuth(app);
 
 export const db = getFirestore(app);

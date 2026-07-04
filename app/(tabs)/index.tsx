@@ -1,5 +1,7 @@
 // cd /d D:\Projects\window-app
 // npx expo start --tunnel
+// npx expo start --tunnel --clear
+import { Colors } from "@/constants/theme";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -12,7 +14,6 @@ import {
 import WindowGrid, { Moment } from "../../components/WindowGrid";
 import { auth, db } from "../../firebaseConfig";
 import { getVietnamDateString } from "../../utils/dateHelpers";
-import { Colors } from "@/constants/theme";
 
 import {
   collection,
@@ -87,7 +88,7 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Today's Window</Text>
+      <Text style={[styles.title, { color: colors.text }]}>Our Window</Text>
       <WindowGrid
         moments={moments}
         onSlotPress={() => router.push("/compose")}
@@ -97,11 +98,11 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 60, paddingHorizontal: 16 },
+  container: { flex: 1, paddingTop: 100, paddingHorizontal: 16 },
   title: {
     fontSize: 24,
     fontWeight: "700",
-    marginBottom: 16,
+    marginBottom: 24,
     textAlign: "center",
   },
 });
