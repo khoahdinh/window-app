@@ -6,6 +6,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 
+import { Colors } from "@/constants/theme";
 import { auth, db } from "@/firebaseConfig";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Stack } from "expo-router";
@@ -53,11 +54,17 @@ export default function RootLayout() {
   function renderContent() {
     // Tầng 1: chưa biết gì cả → đợi
     if (initializing) {
+      const colors = Colors[colorScheme ?? "light"];
       return (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: colors.background,
+          }}
         >
-          <Text>Window</Text>
+          <Text style={{ color: colors.text }}>Window</Text>
         </View>
       );
     }
